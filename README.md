@@ -8,6 +8,12 @@ https://phoenixnap.com/kb/how-to-install-python-3-ubuntu
 
 then go to directory and run command 
 
+# python3.8 create_table.py
+
+it will create users table
+
+after that run below command
+
 # python3.8 app.py
 
 it will start your server
