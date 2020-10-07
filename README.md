@@ -19,3 +19,8 @@ after that run below command
 it will start your server
 
 
+# postman collection link
+
+https://www.getpostman.com/collections/10d5fbfaf9f0e39e4446
+
+import this in your postman collection
