@@ -49,6 +49,7 @@ class User:
 
 class UserRegister(Resource):
   def post(self):
+    message = ''
     parser = reqparse.RequestParser()
     parser.add_argument('username', type=str,
                         required=True, help='Username is required')
@@ -58,9 +59,15 @@ class UserRegister(Resource):
     data = parser.parse_args()
     connection = sqlite3.connect('users.db')
     cursor = connection.cursor()
-    create_user_query = 'Insert into users values(NULL, ?,?)'
-    cursor.execute(create_user_query, (data['username'], data['password']))
-
-    connection.commit()
+    check_user_query = 'Select * from users where username = ?'
+    result = cursor.execute(check_user_query,(data['username'],))
+    row = result.fetchone()
+    if row is None:
+      create_user_query = 'Insert into users values(NULL, ?,?)'
+      cursor.execute(create_user_query, (data['username'], data['password']))
+      connection.commit()
+      message = 'User is successfully registered'
+    else:
+      message = 'Username is already taken'
     connection.close()
-    return {'message': 'User is successfully registered'}
+    return {'message': message}
