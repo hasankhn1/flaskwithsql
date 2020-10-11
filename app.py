@@ -16,9 +16,10 @@ items = []
 class Item(Resource):
   request_parser = reqparse.RequestParser()
   request_parser.add_argument('price',
-  type=float,
-  required=True,
-  help='This is required')
+                              type=float,
+                              required=True,
+                              help='This is required')
+
   @jwt_required()
   def get(self, name):
     item = next(filter(lambda x: x['name'] == name, items), None)
@@ -35,19 +36,23 @@ class Item(Resource):
 
   def delete(self, name):
     global items
-    items = list(filter(lambda x: x['name'] != name, items))
-    return {'message': 'Item is successfully deleted'}
+    if(next(filter(lambda x: x['name'] == name, items), None)):
+      items = list(filter(lambda x: x['name'] != name, items))
+      return {'message': 'Item is successfully deleted'}
+    else:
+      return {'message': 'No item found'}
 
   def put(self, name):
     data = Item.request_parser.parse_args()
-    item = next(filter(lambda x: x['name'] == name, items),None)
+    item = next(filter(lambda x: x['name'] == name, items), None)
     if item is None:
       new_item = {'name': name, 'price': data['price']}
       items.append(new_item)
       return new_item, 200
     else:
       item['price'] = data['price']
-      return item.update(data), 200
+      item.update(data)
+      return item, 200
 
 
 class ItemList(Resource):
@@ -57,6 +62,6 @@ class ItemList(Resource):
 
 api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
-api.add_resource(UserRegister,'/register')
+api.add_resource(UserRegister, '/register')
 
 app.run(port=5000, debug=True)
