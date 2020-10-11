@@ -10,7 +10,7 @@ class User:
 
   @classmethod
   def find_by_username(cls, username):
-    connection = sqlite3.connect('users.db')
+    connection = sqlite3.connect('store.db')
     cursor = connection.cursor()
 
     query = 'Select * from users where username = ?'
@@ -29,7 +29,7 @@ class User:
 
   @classmethod
   def find_by_id(cls, _id):
-    connection = sqlite3.connect('users.db')
+    connection = sqlite3.connect('store.db')
     cursor = connection.cursor()
 
     query = 'Select * from users where id = ?'
@@ -57,7 +57,7 @@ class UserRegister(Resource):
                         required=True, help='Password is required')
 
     data = parser.parse_args()
-    connection = sqlite3.connect('users.db')
+    connection = sqlite3.connect('store.db')
     cursor = connection.cursor()
     check_user_query = 'Select * from users where username = ?'
     result = cursor.execute(check_user_query,(data['username'],))
