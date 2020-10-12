@@ -2,24 +2,21 @@ import sqlite3
 import json
 
 
-class Items:
-  def __init__(self, _id, name, price):
-    self.id = _id
+class ItemModel:
+  def __init__(self, name, price):
     self.name = name
     self.price = price
 
-  @classmethod
-  def create_item(cls, item):
-    get_item = cls.find_item(item['name'])
-    if get_item:
-      return {'message': 'Item already exists'}
+  def json(self):
+    return {'name': self.name, 'price': self.price}
+
+  def create_item(self):
     connection = sqlite3.connect('store.db')
     cursor = connection.cursor()
     create_item_query = 'Insert into items values(NULL,?,?)'
-    cursor.execute(create_item_query, (item['name'], item['price']))
+    cursor.execute(create_item_query, (self.name, self.price))
     connection.commit()
     connection.close()
-    return item
 
   @classmethod
   def find_item(cls, itemName):
@@ -29,7 +26,7 @@ class Items:
     result = cursor.execute(find_item_query, (itemName,))
     row = result.fetchone()
     if row:
-      item = {'item': {'name': row[0], 'price': row[1]}}
+      item = cls(row[1], row[2])
     else:
       item = None
 
@@ -37,9 +34,6 @@ class Items:
 
   @classmethod
   def delete_item(cls, itemName):
-    item = cls.find_item(itemName)
-    if item is None:
-      return {'message': 'No item found!'}
     connection = sqlite3.connect('store.db')
     cursor = connection.cursor()
     delete_query = 'Delete from items where name = ?'

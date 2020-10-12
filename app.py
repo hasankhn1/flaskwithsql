@@ -2,10 +2,10 @@ from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from flask_jwt import JWT, jwt_required
 from security import authenticate, identity
-from user import UserRegister
-from models.items import Items
-from controllers.items import Item
-from controllers.items import ItemList
+from resources.user import UserRegister
+from models.item import ItemModel
+from resources.item import Item
+from resources.item import ItemList
 
 app = Flask(__name__)
 app.secret_key = 'jose'
