@@ -1,5 +1,5 @@
 from flask_jwt import jwt_required
-from flask_restful import Resource, Api, reqparse
+from flask_restful import Resource, Api, reqparse, request
 from models.item import ItemModel
 
 
@@ -16,15 +16,18 @@ class Item(Resource):
 
   @jwt_required()
   def get(self, name):
+    store_id = request.args.get('store_id')
+    if store_id is None:
+      return {'message': 'please provide store id.'}
     item = ItemModel.find_item(name)
     if item:
       return item.json()
     return {'message': 'Item Not found'}, 404
 
   def post(self, name):
-    if ItemModel.find_item(name):
-      return {'message': 'An item with name {} already exists'.format(name)}, 400
     data = Item.request_parser.parse_args()
+    if ItemModel.find_item(name,data['store_id']):
+      return {'message': 'An item with name {} already exists'.format(name)}, 400
     item = ItemModel(name, **data)
     try:
       item.save_to_db()
@@ -33,7 +36,10 @@ class Item(Resource):
     return item.json(), 201
 
   def delete(self, name):
-    item = ItemModel.find_item(name)
+    store_id = request.args.get('store_id')
+    if store_id is None:
+      return {'message': 'please provide store id.'}
+    item = ItemModel.find_item(name, store_id)
     if item:
       try:
         item.delete_item()
@@ -44,7 +50,7 @@ class Item(Resource):
 
   def put(self, name):
     data = Item.request_parser.parse_args()
-    item = ItemModel.find_item(name)
+    item = ItemModel.find_item(name,data['store_id'])
     if item is None:
       item = ItemModel(name, **data)
     else:
@@ -56,4 +62,7 @@ class Item(Resource):
 
 class ItemList(Resource):
   def get(self):
-    return {'items': [x.json() for x in ItemModel.query.all()]}
+    store_id = request.args.get('store_id')
+    if store_id is None:
+      return {'message': 'please provide store id.'}
+    return {'items': [x.json() for x in ItemModel.query.filter_by(store_id=store_id)]}

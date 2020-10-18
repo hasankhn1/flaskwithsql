@@ -22,9 +22,10 @@ class ItemModel(db.Model):
     db.session.commit()
 
   @classmethod
-  def find_item(cls, name):
-    return cls.query.filter_by(name=name).first()
+  def find_item(cls, name, store_id):
+    return cls.query.filter_by(name=name, store_id = store_id).first()
 
   def delete_item(self):
+    print(self)
     db.session.delete(self)
     db.session.commit()
