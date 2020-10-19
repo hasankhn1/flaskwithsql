@@ -7,11 +7,12 @@ class StoreModel(db.Model):
   name = db.Column(db.String(80))
   items = db.relationship('ItemModel', lazy='dynamic')
 
-  def __init__(self, name):
+  def __init__(self, name, _id=None):
     self.name = name
+    self.id = _id
 
   def json(self):
-    return {'name': self.name, 'items': [item.json() for item in self.items.all()]}
+    return {'_id':self.id,'name': self.name, 'items': [item.json() for item in self.items.all()]}
 
   def save_to_db(self):
     db.session.add(self)
