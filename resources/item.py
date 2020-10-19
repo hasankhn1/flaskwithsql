@@ -29,10 +29,8 @@ class Item(Resource):
     if ItemModel.find_item(name,data['store_id']):
       return {'message': 'An item with name {} already exists'.format(name)}, 400
     item = ItemModel(name, **data)
-    try:
-      item.save_to_db()
-    except:
-      return {'message': 'An error occured while inserting the item.'}, 500
+    print(item.json())
+    item.save_to_db()
     return item.json(), 201
 
   def delete(self, name):
