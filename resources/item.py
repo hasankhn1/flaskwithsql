@@ -10,7 +10,7 @@ class Item(Resource):
                               required=True,
                               help='This is required')
   request_parser.add_argument('store_id',
-                              type=int,
+                              type=str,
                               required=True,
                               help='Store id is required for items')
 
