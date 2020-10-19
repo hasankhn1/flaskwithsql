@@ -19,15 +19,15 @@ class Store(Resource):
   def get(self, name):
     store = StoreModel.find_store(name)
     if store is None:
-      return {'message': 'A store with name {} already exists'.format(name)}
+      return {'message': 'A store with name {} doesn\'t exists'.format(name)}
     return store.json(), 200
 
   def delete(self, name):
     store = StoreModel.find_store(name)
     if store:
       store.delete_store()
-      return {'message': 'Store {} is successfully deleted'.format(name)}
-    return {'message': 'Store {} is not created'.format(name)}
+      return {'message': 'Store {} is successfully deleted.'.format(name)}
+    return {'message': 'Store {} is not found.'.format(name)}
 
 
 class StoreList(Resource):

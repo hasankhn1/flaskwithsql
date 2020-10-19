@@ -17,3 +17,15 @@ class UserRegister(Resource):
     user = UserModel(**data)
     user.save_to_db()
     return {'message': 'User is successfully registered!'}
+
+
+class User(Resource):
+  parser = reqparse.RequestParser()
+  parser.add_argument('user_id', type=int,required=True,help="User id is required")
+
+  def __init__(self, _id, username):
+    self.id = _id
+    self.username = username
+
+    # @classmethod
+    # def get_user_by_id(user_id):

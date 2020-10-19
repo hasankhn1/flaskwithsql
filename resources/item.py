@@ -19,7 +19,7 @@ class Item(Resource):
     store_id = request.args.get('store_id')
     if store_id is None:
       return {'message': 'please provide store id.'}
-    item = ItemModel.find_item(name)
+    item = ItemModel.find_item(name,store_id)
     if item:
       return item.json()
     return {'message': 'Item Not found'}, 404

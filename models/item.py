@@ -18,6 +18,7 @@ class ItemModel(db.Model):
     return {'name': self.name, 'price': self.price}
 
   def save_to_db(self):
+    print(self)
     db.session.add(self)
     db.session.commit()
 
