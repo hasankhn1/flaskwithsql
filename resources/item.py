@@ -28,7 +28,7 @@ class Item(Resource):
     data = Item.request_parser.parse_args()
     if ItemModel.find_item(name,data['store_id']):
       return {'message': 'An item with name {} already exists'.format(name)}, 400
-    item = ItemModel(name, data['store_id'])
+    item = ItemModel(name, data['price'], data['store_id'])
     item.save_to_db()
     return item.json(), 201
 
