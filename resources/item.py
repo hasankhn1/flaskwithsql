@@ -28,11 +28,8 @@ class Item(Resource):
     data = Item.request_parser.parse_args()
     if ItemModel.find_item(name,data['store_id']):
       return {'message': 'An item with name {} already exists'.format(name)}, 400
-    item = ItemModel(name, **data)
-    try:
-      item.save_to_db()
-    except:
-      return {'message': 'An error occured while inserting the item.'}, 500
+    item = ItemModel(name, data['store_id'])
+    item.save_to_db()
     return item.json(), 201
 
   def delete(self, name):
