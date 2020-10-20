@@ -21,11 +21,23 @@ class UserRegister(Resource):
 
 class User(Resource):
   parser = reqparse.RequestParser()
-  parser.add_argument('user_id', type=int,required=True,help="User id is required")
+  parser.add_argument('user_id', type=int, required=True,
+                      help="User id is required")
 
-  def __init__(self, _id, username):
-    self.id = _id
-    self.username = username
+  def get(self, user_id):
+    user = UserModel.user_by_id(user_id)
+    if user is None:
+      return {'message': 'No User found.'}
+    return user.json()
 
-    # @classmethod
-    # def get_user_by_id(user_id):
+
+  def delete(self, user_id):
+      user = UserModel.user_by_id(user_id)
+      if user is None:
+        return {'message': 'No User found.'}
+      user.delete_by_userid(user_id)
+      return {'message': 'User is successsfully deleted.'}
+
+class UserList(Resource):
+  def get(self):
+    return [user.json() for user in UserModel.query.all()]
