@@ -6,13 +6,17 @@ class UserModel(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   username = db.Column(db.String(80))
   password = db.Column(db.String(80))
-
-  def __init__(self, username, password):
+  isAdmin = db.Column(db.Boolean)
+  stores = db.relationship('StoreModel', lazy='dynamic')
+  def __init__(self, username, password, isAdmin= False):
+    isAdmin = False if isAdmin == "false" else True
+    print(isAdmin)
     self.username = username
     self.password = password
+    self.isAdmin = isAdmin
 
   def json(self):
-    return {'id': self.id, 'username': self.username}
+    return {'id': self.id, 'username': self.username, 'isAdmin': self.isAdmin}
 
   def save_to_db(self):
     db.session.add(self)

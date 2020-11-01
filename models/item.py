@@ -8,14 +8,17 @@ class ItemModel(db.Model):
   price = db.Column(db.Float(precision=2))
   store_id = db.Column(db.Integer, db.ForeignKey('stores.id'))
   store = db.relationship('StoreModel')
+  user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+  user = db.relationship('StoreModel')
 
-  def __init__(self, name, price, store_id):
+  def __init__(self, name, price, store_id, user_id):
     self.name = name
     self.price = price
     self.store_id = store_id
+    self.user_id = user_id
 
   def json(self):
-    return {'id':self.id,'name': self.name, 'price': self.price, 'store_id': self.store_id}
+    return {'id':self.id,'name': self.name, 'price': self.price, 'store_id': self.store_id, 'user_id': self.user_id}
 
   def save_to_db(self):
     print(self)
@@ -23,10 +26,9 @@ class ItemModel(db.Model):
     db.session.commit()
 
   @classmethod
-  def find_item(cls, name, store_id):
-    return cls.query.filter_by(name=name, store_id = store_id).first()
+  def find_item(cls, name, store_id, user_id):
+    return cls.query.filter_by(name=name, store_id = store_id, user_id = user_id).first()
 
   def delete_item(self):
-    print(self)
     db.session.delete(self)
     db.session.commit()
